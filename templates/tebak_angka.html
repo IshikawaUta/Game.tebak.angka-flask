@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Game Tebak Angka</title>
+    <style>
+        body {
+            font-family: courier;
+            text-transform: uppercase;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+        }
+        p {
+            font-size: 1.1em;
+            color: #555;
+            margin-bottom: 10px;
+        }
+        .clue {
+            font-style: italic;
+            color: #888;
+            margin-bottom: 10px;
+        }
+        form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="number"] {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 80px;
+        }
+        input[type="submit"], a.button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        input[type="submit"]:hover, a.button:hover {
+            background-color: #0056b3;
+        }
+        .indikator {
+            font-size: 2em;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Tebak Angka</h1>
+    <p>Saya telah memilih sebuah angka antara 1 dan 100. Coba tebak!</p>
+    <div class="indikator">{{ indikator }}</div>
+    <p>{{ pesan }}</p>
+    {% if clue %}
+    <p class="clue">{{ clue }}</p>
+    {% endif %}
+    {% if 'angka_rahasia' in session %}
+    <form id="tebakForm" method="POST">
+        <label for="tebakan">Tebakan Anda:</label>
+        <input type="number" id="tebakan" name="tebakan" min="1" max="100" required autofocus>
+        <input type="submit" value="Tebak">
+    </form>
+    <p>Jumlah Tebakan: <strong>{{ jumlah_tebakan }}</strong></p>
+    <a href="/reset" class="button">Mulai Ulang</a>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tebakanInput = document.getElementById('tebakan');
+            if (tebakanInput) {
+                tebakanInput.focus();
+            }
+
+            const tebakForm = document.getElementById('tebakForm');
+            if (tebakForm) {
+                tebakForm.addEventListener('submit', function() {
+                    const angkaRahasia = "{{ 'angka_rahasia' in session }}";
+                    if (angkaRahasia === 'True') {
+                        setTimeout(function() {
+                            tebakanInput.focus();
+                        }, 100);
+                    }
+                });
+            }
+        });
+    </script>
+    {% else %}
+    <p><a href="/" class="button">Mulai Game Baru</a></p>
+    {% endif %}
+</body>
+</html>
